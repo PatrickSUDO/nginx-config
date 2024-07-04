@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NGINX Config Generator</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/scripts.js"></script>
+</head>
+<body>
+    <h1>NGINX Config Generator</h1>
+    <form action="/generate" method="post">
+        <label for="path_access_control">Path Access Control:</label>
+        <textarea id="path_access_control" name="path_access_control"></textarea>
+        <label for="ip_whitelist">IP Whitelist:</label>
+        <textarea id="ip_whitelist" name="ip_whitelist"></textarea>
+        <label for="client_certs">Client Certificates:</label>
+        <textarea id="client_certs" name="client_certs"></textarea>
+        <button type="submit">Generate Config</button>
+    </form>
+</body>
+</html>

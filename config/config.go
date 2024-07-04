@@ -24,3 +24,12 @@ func LoadConfig(filePath string) (*Config, error) {
 	}
 	return &config, nil
 }
+
+func LoadConfigFromString(yamlStr string) (*Config, error) {
+	var config Config
+	err := yaml.Unmarshal([]byte(yamlStr), &config)
+	if err != nil {
+		return nil, err
+	}
+	return &config, nil
+}

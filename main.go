@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"net/http"
+
+	"github.com/PatrickSUDO/nginx-config/handlers"
+)
 
 func main() {
-    fmt.Println("Hello, World!")
+	r := handlers.RegisterHandlers()
+	log.Println("Starting server on :8080")
+	http.ListenAndServe(":8080", r)
 }
