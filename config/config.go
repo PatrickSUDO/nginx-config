@@ -7,9 +7,18 @@ import (
 )
 
 type Config struct {
-	PathAccessControl []string `yaml:"path_access_control"`
-	IPWhitelist       []string `yaml:"ip_whitelist"`
-	ClientCerts       []string `yaml:"client_certs"`
+	IPFilter map[string][]string `yaml:"ipfilter"`
+	Catchall map[string]struct {
+		Port int `yaml:"port"`
+	} `yaml:"catchall"`
+	App map[string]struct {
+		Catchall                   string   `yaml:"catchall"`
+		FQDN                       []string `yaml:"fqdn"`
+		RuntimePort                int      `yaml:"runtime_port"`
+		PathBasedAccessRestriction map[string]struct {
+			IPFilter string `yaml:"ipfilter"`
+		} `yaml:"path_based_access_restriction"`
+	} `yaml:"app"`
 }
 
 func LoadConfig(filePath string) (*Config, error) {

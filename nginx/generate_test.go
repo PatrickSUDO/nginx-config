@@ -8,12 +8,12 @@ import (
 )
 
 func TestGenerateConfig(t *testing.T) {
-	inputYaml, err := os.ReadFile("/mnt/data/input.yaml")
+	inputYaml, err := os.ReadFile("fixtures/input.yaml")
 	if err != nil {
 		t.Fatalf("Failed to read input.yaml: %v", err)
 	}
 
-	expectedNginxConf, err := os.ReadFile("/mnt/data/nginx.conf")
+	expectedNginxConf, err := os.ReadFile("fixtures/nginx.conf")
 	if err != nil {
 		t.Fatalf("Failed to read expected nginx.conf: %v", err)
 	}

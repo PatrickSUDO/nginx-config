@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/PatrickSUDO/nginx-config/config"
@@ -9,19 +10,22 @@ import (
 )
 
 func GenerateHandler(w http.ResponseWriter, r *http.Request) {
-	cfg, err := config.LoadConfig("input.yaml")
+	yamlPath := r.FormValue("yaml_path")
+
+	cfg, err := config.LoadConfig(yamlPath)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Error loading YAML: "+err.Error(), http.StatusBadRequest)
 		return
 	}
+
 	nginxConfig, err := nginx.GenerateConfig(cfg)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Error generating NGINX config: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Disposition", "attachment; filename=nginx.conf")
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Write([]byte(nginxConfig))
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"config": nginxConfig})
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -32,5 +36,6 @@ func RegisterHandlers() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", IndexHandler)
 	r.HandleFunc("/generate", GenerateHandler).Methods("POST")
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	return r
 }
