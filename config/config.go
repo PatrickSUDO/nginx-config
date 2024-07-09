@@ -26,17 +26,12 @@ func LoadConfig(filePath string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	var config Config
-	err = yaml.Unmarshal(data, &config)
-	if err != nil {
-		return nil, err
-	}
-	return &config, nil
+	return LoadConfigFromBytes(data)
 }
 
-func LoadConfigFromString(yamlStr string) (*Config, error) {
+func LoadConfigFromBytes(data []byte) (*Config, error) {
 	var config Config
-	err := yaml.Unmarshal([]byte(yamlStr), &config)
+	err := yaml.Unmarshal(data, &config)
 	if err != nil {
 		return nil, err
 	}
