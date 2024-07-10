@@ -11,14 +11,16 @@ type Config struct {
 	Catchall map[string]struct {
 		Port int `yaml:"port"`
 	} `yaml:"catchall"`
-	App map[string]struct {
-		Catchall                   string   `yaml:"catchall"`
-		FQDN                       []string `yaml:"fqdn"`
-		RuntimePort                int      `yaml:"runtime_port"`
-		PathBasedAccessRestriction map[string]struct {
-			IPFilter string `yaml:"ipfilter"`
-		} `yaml:"path_based_access_restriction"`
-	} `yaml:"app"`
+	App map[string]AppConfig `yaml:"app"`
+}
+
+type AppConfig struct {
+	Catchall                   string   `yaml:"catchall"`
+	FQDN                       []string `yaml:"fqdn"`
+	RuntimePort                int      `yaml:"runtime_port"`
+	PathBasedAccessRestriction map[string]struct {
+		IPFilter string `yaml:"ipfilter"`
+	} `yaml:"path_based_access_restriction"`
 }
 
 func LoadConfig(filePath string) (*Config, error) {
