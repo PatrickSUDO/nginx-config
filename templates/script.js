@@ -5,6 +5,8 @@ const addPathRestrictionBtn = document.getElementById('add_path_restriction');
 const configForm = document.getElementById('configForm');
 const resultContainer = document.getElementById('result');
 const nginxConfigPre = document.getElementById('nginx_config');
+const yamlFileInput = document.getElementById('yaml_file');
+const manualInputs = document.querySelectorAll('#catchall_port, #app_name, #app_fqdn, #app_port');
 
 let ipFilterCount = 0;
 let pathRestrictionCount = 0;
@@ -22,6 +24,7 @@ function addIpFilter() {
     `;
     ipFiltersContainer.insertAdjacentHTML('beforeend', filterHtml);
     ipFilterCount++;
+    clearFileInput();
 }
 
 function removeIpFilter(filterId) {
@@ -41,11 +44,38 @@ function addPathRestriction() {
     `;
     pathRestrictionsContainer.insertAdjacentHTML('beforeend', restrictionHtml);
     pathRestrictionCount++;
+    clearFileInput();
 }
 
 function removePathRestriction(restrictionId) {
     document.getElementById(restrictionId).remove();
 }
+
+function clearFileInput() {
+    yamlFileInput.value = '';
+}
+
+function clearManualInputs() {
+    manualInputs.forEach(input => input.value = '');
+    while (ipFiltersContainer.firstChild) {
+        ipFiltersContainer.removeChild(ipFiltersContainer.firstChild);
+    }
+    while (pathRestrictionsContainer.firstChild) {
+        pathRestrictionsContainer.removeChild(pathRestrictionsContainer.firstChild);
+    }
+    ipFilterCount = 0;
+    pathRestrictionCount = 0;
+}
+
+yamlFileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        clearManualInputs();
+    }
+});
+
+manualInputs.forEach(input => {
+    input.addEventListener('input', clearFileInput);
+});
 
 configForm.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -56,7 +86,7 @@ configForm.addEventListener('submit', async function(e) {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...';
 
     const formData = new FormData();
-    const yamlFile = document.getElementById('yaml_file').files[0];
+    const yamlFile = yamlFileInput.files[0];
     
     if (yamlFile) {
         formData.append('yaml_file', yamlFile);
