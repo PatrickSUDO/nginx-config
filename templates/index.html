@@ -8,14 +8,61 @@
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6">NGINX Config Generator</h1>
+        <h1 class="text-3xl font-bold mb-6">NGINX Configuration Generator</h1>
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <form id="configForm">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="yaml_path">
-                        YAML Configuration Path
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="yaml_file">
+                        Upload YAML Configuration File
                     </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="yaml_path" type="text" placeholder="/path/to/input.yaml" required>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="yaml_file" type="file" accept=".yaml,.yml">
+                </div>
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold mb-2">Or Enter Configuration Manually</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="catchall_port">
+                                Catchall Port
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="catchall_port" type="number" placeholder="7000">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="app_name">
+                                App Name
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="app_name" type="text" placeholder="myapp">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="app_fqdn">
+                                App FQDN (comma-separated)
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="app_fqdn" type="text" placeholder="myapp.com,www.myapp.com">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="app_port">
+                                App Runtime Port
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="app_port" type="number" placeholder="8000">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">
+                            Path-Based Access Restrictions
+                        </label>
+                        <div id="path_restrictions_container"></div>
+                        <button type="button" id="add_path_restriction" class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Add Path Restriction
+                        </button>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">
+                            IP Filters
+                        </label>
+                        <div id="ip_filters_container"></div>
+                        <button type="button" id="add_ip_filter" class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Add IP Filter
+                        </button>
+                    </div>
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
@@ -30,22 +77,6 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        document.getElementById('configForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const yamlPath = document.getElementById('yaml_path').value;
-            try {
-                const response = await axios.post('/generate', `yaml_path=${encodeURIComponent(yamlPath)}`, {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                });
-                document.getElementById('nginx_config').textContent = response.data.config;
-                document.getElementById('result').classList.remove('hidden');
-            } catch (error) {
-                alert('Error generating config: ' + error.response.data);
-            }
-        });
-    </script>
+    <script src="/templates/script.js"></script>
 </body>
 </html>
